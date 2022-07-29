@@ -34,7 +34,7 @@ class MemberRepositoryV1Test {
 
     @Test
     void crud() throws SQLException {
-        // save ;
+        // save
         Member member = new Member("memberV7", 10000);
         repository.save(member);
 
