@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
-class MemberRepositoryV1Test {
+class  MemberRepositoryV1Test {
 
     MemberRepositoryV1 repository;
 
