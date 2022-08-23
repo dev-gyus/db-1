@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class  MemberRepositoryV1Test {
 
     MemberRepositoryV1 repository;
-
+//;;;
     @BeforeEach
     void beforeEach() {
         // 기본 DriverManager - 항상 새로운 커넥션 획득
