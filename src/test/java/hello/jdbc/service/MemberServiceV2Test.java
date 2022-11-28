@@ -1,36 +1,39 @@
 package hello.jdbc.service;
 
+import hello.jdbc.connection.ConnectionConstants;
 import hello.jdbc.domain.Member;
-import hello.jdbc.repository.MemberRepositoryV1;
+import hello.jdbc.repository.MemberRepositoryV2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import javax.sql.DataSource;
+
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static hello.jdbc.connection.ConnectionConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * 기본 동작, 트랜잭션이 없어서 문제 발생
- */
-class MemberServiceV1Test {
+@SpringBootTest
+class MemberServiceV2Test {
+    private MemberRepositoryV2 memberRepository;
+    private MemberServiceV2 memberService;
 
-    public static final String MEMBER_A = "memberA";
-    public static final String MEMBER_B = "memberB";
-    public static final String MEMBER_EX = "ex";
-
-    private MemberRepositoryV1 memberRepository;
-    private MemberServiceV1 memberService;
+    private final String MEMBER_A = "memberA";
+    private final String MEMBER_B = "memberB";
+    private final String MEMBER_EX = "ex";
 
     @BeforeEach
     void before() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
-        memberRepository = new MemberRepositoryV1(dataSource);
-        memberService = new MemberServiceV1(memberRepository);
+        DataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+        memberRepository = new MemberRepositoryV2(dataSource);
+        memberService = new MemberServiceV2(dataSource, memberRepository);
     }
 
     @AfterEach
@@ -41,8 +44,8 @@ class MemberServiceV1Test {
     }
 
     @Test
-    @DisplayName("정상 이체")
-    void accountTransfer() throws SQLException {
+    @DisplayName("트랜잭션 - 정상 이체")
+    void accountTransferWithTransaction() throws SQLException {
         // given
         Member memberA = new Member(MEMBER_A, 10000);
         Member memberB = new Member(MEMBER_B, 10000);
@@ -58,8 +61,8 @@ class MemberServiceV1Test {
     }
 
     @Test
-    @DisplayName("이체중 예외 발생")
-    void accountTransferEx() throws SQLException {
+    @DisplayName("트랜잭션 - 이체중 예외 발생")
+    void accountTransferExWithTransaction() throws SQLException {
         // given
         Member memberA = new Member(MEMBER_A, 10000);
         Member memberEX = new Member(MEMBER_EX, 10000);
@@ -71,7 +74,8 @@ class MemberServiceV1Test {
         // then
         Member findMemberA = memberRepository.findById(memberA.getMemberId());
         Member findMemberB = memberRepository.findById(memberEX.getMemberId());
-        assertThat(findMemberA.getMoney()).isEqualTo(8000);
+        assertThat(findMemberA.getMoney()).isEqualTo(10000);
         assertThat(findMemberB.getMoney()).isEqualTo(10000);
     }
+
 }

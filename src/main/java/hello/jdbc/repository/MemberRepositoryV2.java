@@ -126,7 +126,6 @@ public class MemberRepositoryV2 {
             throw e;
         } finally {
             // connection은 여기서 닫지 않습니다
-            JdbcUtils.closeResultSet(rs);
             JdbcUtils.closeStatement(pstmt);
         }
     }
