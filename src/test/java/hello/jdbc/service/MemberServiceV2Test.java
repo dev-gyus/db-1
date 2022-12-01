@@ -59,7 +59,7 @@ class MemberServiceV2Test {
         assertThat(findMemberA.getMoney()).isEqualTo(8000);
         assertThat(findMemberB.getMoney()).isEqualTo(12000);
     }
-
+//;;;
     @Test
     @DisplayName("트랜잭션 - 이체중 예외 발생")
     void accountTransferExWithTransaction() throws SQLException {
