@@ -46,19 +46,6 @@ public class MemberServiceV3_2 {
         memberRepository.update(toId, toMember.getMoney() + money);
     }
 
-    private void release(Connection con) {
-        if (con != null) {
-            try {
-                // 위에서 autoCommit을 false로 바꿨으므로, 이상태로 커넥션 풀에 커넥션을 반환하면
-                // autoCommit이 false인 상태로 반환되므로 명시적으로 autoCommit true로 설정 후 반환해줌
-                con.setAutoCommit(true);
-                con.close();
-            } catch (Exception e) {
-                log.info("error", e);
-            }
-        }
-    }
-
     private void validation(Member toMember) {
         if (toMember.getMemberId().equals("ex")) {
             throw new IllegalStateException("이체중 예외 발생");
